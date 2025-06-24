@@ -11,8 +11,9 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    #draw the game
+    #draw game
     display_surface.fill('blue')
     pygame.display.update()
-    
+
+#quiting pygame to save resourses   
 pygame.quit()
