@@ -7,12 +7,14 @@ window_width, window_height = 1280, 720
 display_surface = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption("Shooting space[::-1]")
 running = True
+clock = pygame.time.Clock()
 
 #player
 player_path = join("space shooter", "images", "player.png")
 player_surf = pygame.image.load(player_path).convert_alpha()
 player_rect = player_surf.get_frect(bottomleft = (100, window_height-50))
-direction = 1
+player_direction = pygame.math.Vector2()
+player_speed = 550
 #stars
 star_path = join("space shooter", "images", "star.png")
 star_surf = pygame.image.load(star_path).convert_alpha()
@@ -26,26 +28,28 @@ laser_path = join("space shooter", "images", "laser.png")
 laser_surf = pygame.image.load(laser_path).convert_alpha()
 laser_rect = laser_surf.get_frect(bottomleft = (20, window_height-20))
 while running:
+    # delta time, tick(max framerate)
+    dt = clock.tick() / 1000
     # event loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        #if event.type == pygame.MOUSEMOTION:
+        #    player_rect.center = event.pos
+
+    #input
+    key = pygame.key.get_pressed()
+    player_direction.x = int(key[pygame.K_RIGHT]) - int(key[pygame.K_LEFT])  
+    player_direction.y = int(key[pygame.K_DOWN]) - int(key[pygame.K_UP])
+    player_direction = player_direction.normalize() if player_direction else player_direction  
+    player_rect.center += player_direction * player_speed * dt    
     #draw game
     display_surface.fill("darkgrey")
-
     for position in star_position:
         display_surface.blit(star_surf, position) 
-
     display_surface.blit(laser_surf, laser_rect)    
-
-    display_surface.blit(meteor_surf, meteor_rect)
-
-    #player movement
-    player_rect.right += direction*0.3
-    if player_rect.right > window_width or player_rect.left < 0:
-        direction *= (-1)
+    display_surface.blit(meteor_surf, meteor_rect)  
     display_surface.blit(player_surf, player_rect) 
-
     pygame.display.update()
 
 #quiting pygame to save resourses   
