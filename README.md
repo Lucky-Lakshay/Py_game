@@ -15,5 +15,5 @@ This repository contains my code while following the **"Master Python by Buildin
 ## 🚀 How to Run
 1. Install Pygame:
    ```bash
-   pip install pygame
+   pip install pygame-ce
    
