@@ -1,4 +1,4 @@
-# 🚀 Space Shooter[::-1]
+# 🚀 Shooter Space[::-1]
 
 A fast-paced 2D space shooting game built with **Pygame**. Dodge meteors, shoot lasers, and survive as long as you can!
 
