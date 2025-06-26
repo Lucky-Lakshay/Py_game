@@ -23,6 +23,16 @@ class Player(pygame.sprite.Sprite):
         self.direction = self.direction.normalize() if self.direction else self.direction  
         self.rect.center += self.direction * self.speed * dt
         
+        #Screen Boundary Check
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.right > window_width:
+            self.rect.right = window_width
+        if self.rect.top < 0:
+            self.rect.top = 0
+        if self.rect.bottom > window_height:
+            self.rect.bottom = window_height
+
         #laser controls
         recent_keys = pygame.key.get_just_pressed()
         if recent_keys[pygame.K_SPACE] and self.can_shoot:
