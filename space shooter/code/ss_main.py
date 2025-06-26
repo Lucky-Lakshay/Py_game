@@ -77,7 +77,7 @@ class Meteor(pygame.sprite.Sprite):
         super().__init__(groups)
         self.original_surf = surf
         self.image = surf
-        self.rect = self.image.get_frect(center = (randint(100, 1100), 0))
+        self.rect = self.image.get_frect(center = (randint(-10, 1300), 0))
         self.direction = pygame.math.Vector2(uniform(-0.5, 0.5), 1)
         self.speed = randint(500,800)
         self.rotation_speed = randint(-70,70)
