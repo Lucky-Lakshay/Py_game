@@ -6,11 +6,11 @@ This repository contains my code while following the **"Master Python by Buildin
 ▶️ [Watch on YouTube](https://youtu.be/8OMghdHP-zs)
 
 ## 🕹️ Games Built in This Series
-1. **Space shooter**
+1. **Space Shooter**
 2. **Vampire Survivor**
-3. ****
-4. ****
-5. ****
+3. **Pong**
+4. **Platformer**
+5. **Monster Battle**
 
 ## 🚀 How to Run
 1. Install Pygame:
