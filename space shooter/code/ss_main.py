@@ -116,6 +116,7 @@ def collision():
             Animated_explosion(explosion_frame, laser.rect.midtop, all_sprites)
             explosion_sound.play()
 lives = 3
+game_start_time = pygame.time.get_ticks()
 def display_lives():
     text = font.render(f"Lives: {lives}", True, (240, 240, 240))
     rect = text.get_frect(topright = (window_width - 25, 20))
@@ -123,12 +124,11 @@ def display_lives():
     pygame.draw.rect(display_surface, "white", rect.inflate(30, 10).move(0, -5), 3, 10)
 
 def display_score():
-    current_time = pygame.time.get_ticks() // 100
-    text_surf = font.render(str(current_time), True, (240,240,240))
-    text_rect = text_surf.get_frect(topleft = (25 , 20))
+    current_time = (pygame.time.get_ticks() - game_start_time) // 100
+    text_surf = font.render(str(current_time), True, (240, 240, 240))
+    text_rect = text_surf.get_frect(topleft=(25, 20))
     display_surface.blit(text_surf, text_rect)
     pygame.draw.rect(display_surface, "white", text_rect.inflate(30, 10).move(0, -5), 3, 10)
-
 
 #general setup
 pygame.init()
@@ -161,7 +161,7 @@ player = Player(all_sprites)
 
 #meteor event
 meteor_event = pygame.event.custom_type()
-pygame.time.set_timer(meteor_event, 300)
+pygame.time.set_timer(meteor_event, 100)
 
 while running:
     # delta time, tick(max framerate)
@@ -182,6 +182,7 @@ while running:
                     for i in range(35):
                         Star(all_sprites, star_surf)
                     player = Player(all_sprites)
+                    game_start_time = pygame.time.get_ticks()
                     game_active = True
                 elif event.key == pygame.K_q:  # Quit
                     running = False
