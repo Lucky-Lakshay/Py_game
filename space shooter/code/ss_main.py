@@ -2,6 +2,10 @@ import pygame
 from os.path import join
 from random import randint, uniform
 
+final_score = 0
+lives = 3
+game_start_time = pygame.time.get_ticks()
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, groups):
         super().__init__(groups)
@@ -101,13 +105,14 @@ class Animated_explosion(pygame.sprite.Sprite):
             self.kill()
 
 def collision():
-    global game_active, lives
+    global game_active, lives, final_score
     collision_sprite = pygame.sprite.spritecollide(player, meteor_sprites, True, pygame.sprite.collide_mask)
     if collision_sprite:
         lives -= 1
         damage_sound.play()
         Animated_explosion(explosion_frame, player.rect.center, all_sprites)
         if lives <= 0:
+            final_score = (pygame.time.get_ticks() - game_start_time) // 100
             game_active = False 
     for laser in laser_sprites:
         collision_sprite = pygame.sprite.spritecollide(laser, meteor_sprites, True)
@@ -115,8 +120,7 @@ def collision():
             laser.kill()
             Animated_explosion(explosion_frame, laser.rect.midtop, all_sprites)
             explosion_sound.play()
-lives = 3
-game_start_time = pygame.time.get_ticks()
+
 def display_lives():
     text = font.render(f"Lives: {lives}", True, (240, 240, 240))
     rect = text.get_frect(topright = (window_width - 25, 20))
@@ -124,11 +128,12 @@ def display_lives():
     pygame.draw.rect(display_surface, "white", rect.inflate(30, 10).move(0, -5), 3, 10)
 
 def display_score():
-    current_time = (pygame.time.get_ticks() - game_start_time) // 100
-    text_surf = font.render(str(current_time), True, (240, 240, 240))
+    current_score = (pygame.time.get_ticks() - game_start_time) // 100
+    text_surf = font.render(str(current_score), True, (240, 240, 240))
     text_rect = text_surf.get_frect(topleft=(25, 20))
     display_surface.blit(text_surf, text_rect)
     pygame.draw.rect(display_surface, "white", text_rect.inflate(30, 10).move(0, -5), 3, 10)
+    return current_score
 
 #general setup
 pygame.init()
@@ -201,9 +206,11 @@ while running:
     # Game Over Screen
         display_surface.fill((0, 0, 0))
         game_over_text = font.render("GAME OVER", True, (255, 0, 0))
+        score_text = font.render(f"Your Score: {final_score}", True, (255, 255, 255))
         restart_text = font.render("Press R to Restart or Q to Quit", True, (255, 255, 255))
         display_surface.blit(game_over_text, game_over_text.get_frect(center=(window_width//2, window_height//2 - 50)))
-        display_surface.blit(restart_text, restart_text.get_frect(center=(window_width//2, window_height//2 + 20)))
+        display_surface.blit(score_text, score_text.get_frect(center=(window_width // 2, window_height // 2)))
+        display_surface.blit(restart_text, restart_text.get_frect(center=(window_width//2, window_height//2 + 60)))
 
     pygame.display.update()
 
