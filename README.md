@@ -7,7 +7,7 @@ This repository contains my code while following the **"Master Python by Buildin
 
 ## 🕹️ Games Built in This Series
 1. **Space shooter**
-2. ****
+2. **Vampire Survivor**
 3. ****
 4. ****
 5. ****
