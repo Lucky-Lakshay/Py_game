@@ -166,7 +166,7 @@ player = Player(all_sprites)
 
 #meteor event
 meteor_event = pygame.event.custom_type()
-pygame.time.set_timer(meteor_event, 100)
+pygame.time.set_timer(meteor_event, 200)
 
 while running:
     # delta time, tick(max framerate)
