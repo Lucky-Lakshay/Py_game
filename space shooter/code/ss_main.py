@@ -51,6 +51,12 @@ class Star(pygame.sprite.Sprite):
         super().__init__(groups)
         self.image = surf
         self.rect = self.image.get_frect(center = (randint(0,window_width), randint(0,window_height)))
+        self.speed = uniform(50, 60)
+    def update(self, dt):
+        self.rect.y += self.speed * dt
+        if self.rect.top > window_height:
+            self.rect.bottom = 0
+            self.rect.x = randint(0, window_width)
 
 class Laser(pygame.sprite.Sprite):
     def __init__(self, surf, pos, groups):
@@ -95,17 +101,26 @@ class Animated_explosion(pygame.sprite.Sprite):
             self.kill()
 
 def collision():
-    global running
+    global game_active, lives
     collision_sprite = pygame.sprite.spritecollide(player, meteor_sprites, True, pygame.sprite.collide_mask)
     if collision_sprite:
+        lives -= 1
         damage_sound.play()
-        running = False 
+        Animated_explosion(explosion_frame, player.rect.center, all_sprites)
+        if lives <= 0:
+            game_active = False 
     for laser in laser_sprites:
         collision_sprite = pygame.sprite.spritecollide(laser, meteor_sprites, True)
         if collision_sprite:
             laser.kill()
             Animated_explosion(explosion_frame, laser.rect.midtop, all_sprites)
             explosion_sound.play()
+lives = 3
+def display_lives():
+    text = font.render(f"Lives: {lives}", True, (240, 240, 240))
+    rect = text.get_frect(topright = (window_width - 25, 20))
+    display_surface.blit(text, rect)
+    pygame.draw.rect(display_surface, "white", rect.inflate(30, 10).move(0, -5), 3, 10)
 
 def display_score():
     current_time = pygame.time.get_ticks() // 100
@@ -121,6 +136,7 @@ window_width, window_height = 1280, 720
 display_surface = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption("Shooter Space[::-1]")
 running = True
+game_active = True
 clock = pygame.time.Clock()
 
 #import
@@ -154,15 +170,39 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: 
             running = False
-        if event.type == meteor_event:
+
+        if not game_active:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:  # Restart
+                    # Reset game state
+                    lives = 3
+                    all_sprites.empty()
+                    meteor_sprites.empty()
+                    laser_sprites.empty()
+                    for i in range(35):
+                        Star(all_sprites, star_surf)
+                    player = Player(all_sprites)
+                    game_active = True
+                elif event.key == pygame.K_q:  # Quit
+                    running = False
+    
+        if event.type == meteor_event and game_active:
             Meteor(meteor_surf, (all_sprites, meteor_sprites))
-    #update
-    all_sprites.update(dt)
-    collision()
-    #draw the game
-    display_surface.fill((24, 25, 26))
-    display_score()
-    all_sprites.draw(display_surface) 
+
+    if game_active:
+        all_sprites.update(dt)
+        collision()
+        display_surface.fill((24, 25, 26))
+        display_score()
+        display_lives()
+        all_sprites.draw(display_surface)
+    else:
+    # Game Over Screen
+        display_surface.fill((0, 0, 0))
+        game_over_text = font.render("GAME OVER", True, (255, 0, 0))
+        restart_text = font.render("Press R to Restart or Q to Quit", True, (255, 255, 255))
+        display_surface.blit(game_over_text, game_over_text.get_frect(center=(window_width//2, window_height//2 - 50)))
+        display_surface.blit(restart_text, restart_text.get_frect(center=(window_width//2, window_height//2 + 20)))
 
     pygame.display.update()
 
