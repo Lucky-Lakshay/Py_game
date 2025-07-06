@@ -13,7 +13,9 @@ This repository contains my code while following the **"Master Python by Buildin
 5. **Monster Battle**
 
 ## 🚀 How to Run
-1. Install Pygame:
+1. Clone "Py-game" Repo
+2. Install Pygame:
    ```bash
    pip install pygame-ce
-   
+3. Open the game folder > code
+4. Run main.py (ss_main, vs_main, etc)
